@@ -8,7 +8,7 @@ import { chatService } from '../services/index.js'
  */
 export function useChat() {
   const { execute, loading, error, clearError } = useApi()
-  
+
   const messages = ref([])
   const currentMessage = ref('')
   const assistantInfo = ref(null)
@@ -27,7 +27,7 @@ export function useChat() {
       id: Date.now(),
       type: 'user',
       content: message.trim(),
-      timestamp: new Date()
+      timestamp: new Date(),
     }
 
     // Agregar mensaje del usuario
@@ -44,37 +44,56 @@ export function useChat() {
         type: 'assistant',
         content: '',
         timestamp: new Date(),
-        typing: true
+        typing: true,
       }
       messages.value.push(typingMessage)
       await scrollToBottom()
 
       // Enviar mensaje a la API
       const result = await execute(() => chatService.sendMessage(message))
-      
+
       // Remover mensaje de "escribiendo..." y agregar respuesta real
       messages.value.pop()
-      
+
+      // Manejar diferentes formatos de respuesta del backend
+      let messageContent, messageTimestamp
+
+      if (result.data.reply) {
+        // Nuevo formato: { data: { reply: { text, timestamp } } }
+        messageContent = result.data.reply.text
+        messageTimestamp = result.data.reply.timestamp
+      } else if (result.data.message) {
+        // Formato documentado: { data: { message, timestamp } }
+        messageContent = result.data.message
+        messageTimestamp = result.data.timestamp
+      } else {
+        throw new Error('Formato de respuesta inválido')
+      }
+
       const assistantMessage = {
         id: Date.now() + 2,
         type: 'assistant',
-        content: result.data.message,
-        timestamp: new Date(result.data.timestamp)
+        content: messageContent,
+        timestamp: new Date(messageTimestamp),
       }
-      
+
       messages.value.push(assistantMessage)
       await scrollToBottom()
-      
+
       return result
     } catch (error) {
       // Remover mensaje de "escribiendo..." en caso de error
       messages.value.pop()
-      
+
       // Determinar el tipo de error y mostrar mensaje apropiado
       let errorContent = ''
-      if (error.message.includes('conexión') || error.message.includes('Network Error') || error.message.includes('500')) {
+      if (
+        error.message.includes('conexión') ||
+        error.message.includes('Network Error') ||
+        error.message.includes('500')
+      ) {
         errorContent = `🔌 **Servicio temporalmente no disponible**
-        
+
 Lo siento, el servicio de chat no está disponible en este momento. Esto puede deberse a que:
 
 • El servidor backend no está ejecutándose
@@ -89,7 +108,7 @@ Lo siento, el servicio de chat no está disponible en este momento. Esto puede d
 Si eres desarrollador, asegúrate de que el servidor backend esté corriendo en \`http://localhost:3001\``
       } else if (error.message.includes('comunicarme con la IA') || error.message.includes('IA')) {
         errorContent = `🤖 **Servicio de IA temporalmente no disponible**
-        
+
 El servidor está funcionando, pero hay un problema con el servicio de inteligencia artificial. Esto puede deberse a:
 
 • Configuración de API keys faltante o incorrecta
@@ -105,14 +124,14 @@ El servidor está funcionando, pero hay un problema con el servicio de inteligen
       } else {
         errorContent = `❌ **Error**: ${error.message}`
       }
-      
+
       const errorMessage = {
         id: Date.now() + 3,
         type: 'error',
         content: errorContent,
-        timestamp: new Date()
+        timestamp: new Date(),
       }
-      
+
       messages.value.push(errorMessage)
       await scrollToBottom()
       throw error
@@ -161,24 +180,43 @@ El servidor está funcionando, pero hay un problema con el servicio de inteligen
     if (!message || message.trim().length === 0) {
       return { valid: false, message: 'El mensaje no puede estar vacío' }
     }
-    
+
     if (message.length > 1000) {
       return { valid: false, message: 'El mensaje no puede exceder 1000 caracteres' }
     }
-    
+
     return { valid: true, message: '' }
   }
 
   /**
    * Formatea la fecha del mensaje
-   * @param {Date} timestamp - Fecha a formatear
+   * @param {Date|number|string} timestamp - Fecha a formatear
    * @returns {string} Fecha formateada
    */
   const formatMessageTime = (timestamp) => {
-    return new Intl.DateTimeFormat('es-PE', {
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(new Date(timestamp))
+    try {
+      // Si timestamp es undefined o null, usar fecha actual
+      if (!timestamp) {
+        timestamp = new Date()
+      }
+
+      // Convertir a Date si no lo es ya
+      const date = timestamp instanceof Date ? timestamp : new Date(timestamp)
+
+      // Verificar si la fecha es válida
+      if (isNaN(date.getTime())) {
+        console.warn('Timestamp inválido:', timestamp)
+        return 'Hora inválida'
+      }
+
+      return new Intl.DateTimeFormat('es-PE', {
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(date)
+    } catch (error) {
+      console.error('Error formateando timestamp:', error, timestamp)
+      return 'Hora inválida'
+    }
   }
 
   /**
@@ -188,10 +226,11 @@ El servidor está funcionando, pero hay un problema con el servicio de inteligen
     const welcomeMessage = {
       id: 0,
       type: 'assistant',
-      content: '¡Hola! Soy tu asistente especializado en micro y pequeñas empresas en Perú. Puedo ayudarte con información sobre regímenes tributarios, formalización de empresas, beneficios MYPE y mucho más. ¿En qué puedo ayudarte hoy?',
-      timestamp: new Date()
+      content:
+        '¡Hola! Soy tu asistente especializado en micro y pequeñas empresas en Perú. Puedo ayudarte con información sobre regímenes tributarios, formalización de empresas, beneficios MYPE y mucho más. ¿En qué puedo ayudarte hoy?',
+      timestamp: new Date(),
     }
-    
+
     if (messages.value.length === 0) {
       messages.value.push(welcomeMessage)
     }
@@ -209,7 +248,7 @@ El servidor está funcionando, pero hay un problema con el servicio de inteligen
     '¿Cómo me formalizo como MYPE?',
     '¿Cuáles son los regímenes tributarios disponibles?',
     '¿Qué documentos necesito para registrar mi empresa?',
-    '¿Cuáles son las obligaciones de una MYPE?'
+    '¿Cuáles son las obligaciones de una MYPE?',
   ])
 
   /**
@@ -230,13 +269,13 @@ El servidor está funcionando, pero hay un problema con el servicio de inteligen
     loading,
     error,
     suggestedMessages,
-    
+
     // Computed
     hasMessages,
     isValidMessage,
     messageCount,
     lastMessage,
-    
+
     // Funciones
     sendMessage,
     sendSuggestedMessage,
@@ -246,7 +285,7 @@ El servidor está funcionando, pero hay un problema con el servicio de inteligen
     formatMessageTime,
     addWelcomeMessage,
     scrollToBottom,
-    clearError
+    clearError,
   }
 }
 
