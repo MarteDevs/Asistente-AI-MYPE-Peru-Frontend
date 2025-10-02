@@ -5,18 +5,21 @@ Una aplicación web moderna desarrollada con Vue.js que proporciona herramientas
 ## ✨ Características
 
 ### 🧮 Calculadora de Régimen Tributario
+
 - **Análisis automático**: Determina el régimen tributario más conveniente basándose en ingresos mensuales
 - **Recomendaciones personalizadas**: Obtén sugerencias específicas para tu tipo de negocio
 - **Cálculo de impuestos**: Estimaciones de impuestos mensuales según el régimen
 - **Información detallada**: Beneficios, requisitos y limitaciones de cada régimen
 
 ### 🤖 Asistente de IA Especializado
+
 - **Chat inteligente**: Asistente especializado en temas empresariales y tributarios para MYPE
 - **Disponibilidad 24/7**: Respuestas inmediatas a tus consultas
 - **Información actualizada**: Datos actualizados sobre normativas peruanas
 - **Interfaz intuitiva**: Chat fácil de usar con historial de conversaciones
 
 ### 🎨 Diseño Moderno
+
 - **UI/UX optimizada**: Diseño responsivo y moderno con Tailwind CSS
 - **Navegación intuitiva**: Interfaz clara y fácil de usar
 - **Accesibilidad**: Diseño accesible para todos los usuarios
@@ -49,6 +52,8 @@ src/
 │   ├── api.js         # Cliente HTTP base
 │   ├── taxRegimeService.js  # Servicio de régimen tributario
 │   └── chatService.js      # Servicio de chat
+├── config/             # Configuración de la aplicación
+│   └── env.js         # Gestión centralizada de variables de entorno
 └── assets/            # Recursos estáticos
     └── main.css       # Estilos globales con Tailwind
 ```
@@ -56,18 +61,21 @@ src/
 ## 🚀 Instalación y Configuración
 
 ### Prerrequisitos
+
 - Node.js (versión 16 o superior)
 - pnpm (recomendado) o npm
 
 ### Instalación
 
 1. **Clonar el repositorio**
+
    ```bash
    git clone <repository-url>
    cd frontend-asistente-mype
    ```
 
 2. **Instalar dependencias**
+
    ```bash
    pnpm install
    # o
@@ -75,12 +83,18 @@ src/
    ```
 
 3. **Configurar variables de entorno**
+
    ```bash
-   # Crear archivo .env.local
+   # Copiar el archivo de ejemplo
+   cp .env.example .env
+
+   # O crear manualmente el archivo .env con:
    VITE_API_BASE_URL=http://localhost:3001/api
+   VITE_API_TIMEOUT=10000
    ```
 
 4. **Ejecutar en modo desarrollo**
+
    ```bash
    pnpm dev
    # o
@@ -103,16 +117,57 @@ pnpm lint         # Ejecuta linting
 pnpm format       # Formatea código con Prettier
 ```
 
+## ⚙️ Variables de Entorno
+
+La aplicación utiliza variables de entorno para la configuración. Todas las variables deben empezar con `VITE_` para ser accesibles.
+
+### Variables Disponibles
+
+| Variable            | Descripción                     | Valor por Defecto           | Requerido |
+| ------------------- | ------------------------------- | --------------------------- | --------- |
+| `VITE_API_BASE_URL` | URL base del backend API        | `http://localhost:3001/api` | ✅ Sí     |
+| `VITE_API_TIMEOUT`  | Timeout de peticiones HTTP (ms) | `10000`                     | ❌ No     |
+
+### Configuración por Entorno
+
+**Desarrollo** (`.env`)
+
+```bash
+VITE_API_BASE_URL=http://localhost:3001/api
+VITE_API_TIMEOUT=10000
+```
+
+**Producción** (`.env.production`)
+
+```bash
+VITE_API_BASE_URL=https://api.tu-dominio.com/api
+VITE_API_TIMEOUT=15000
+```
+
+### Acceso a Variables
+
+Las variables se gestionan de forma centralizada en `src/config/env.js`:
+
+```javascript
+import { config } from '@/config/env.js'
+
+// Usar configuración
+const apiUrl = config.api.baseURL
+const timeout = config.api.timeout
+```
+
 ## 📡 API Integration
 
 La aplicación consume las siguientes APIs:
 
 ### Calculadora de Régimen Tributario
+
 - `POST /api/tax-regime/calculate` - Calcula régimen recomendado
 - `GET /api/tax-regime/regimes` - Obtiene todos los regímenes
 - `GET /api/tax-regime/health` - Verifica estado del servicio
 
 ### Chat con IA
+
 - `POST /api/chat/message` - Envía mensaje al asistente
 - `GET /api/chat/assistant-info` - Información del asistente
 - `GET /api/chat/health` - Verifica estado del servicio
@@ -126,16 +181,19 @@ La aplicación consume las siguientes APIs:
 ## 🌟 Características Técnicas
 
 ### Composables Vue
+
 - **useApi**: Manejo centralizado de estados de API (loading, error)
 - **useTaxRegime**: Lógica específica para cálculos tributarios
 - **useChat**: Gestión del estado del chat y mensajes
 
 ### Servicios
+
 - **Interceptores HTTP**: Manejo automático de errores y timeouts
 - **Validación de datos**: Validación en frontend antes de envío
 - **Manejo de errores**: Sistema robusto de manejo de errores
 
 ### UI/UX
+
 - **Diseño responsivo**: Optimizado para móviles y desktop
 - **Animaciones suaves**: Transiciones CSS para mejor experiencia
 - **Estados de carga**: Indicadores visuales durante operaciones
@@ -181,7 +239,7 @@ Si tienes preguntas o necesitas ayuda:
 ## Recommended Browser Setup
 
 - Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
+  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
   - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
 - Firefox:
   - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)

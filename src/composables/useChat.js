@@ -1,6 +1,7 @@
 import { ref, computed, nextTick } from 'vue'
 import { useApi } from './useApi.js'
 import { chatService } from '../services/index.js'
+import { config } from '../config/env.js'
 
 /**
  * Composable para manejar el chat con IA
@@ -105,7 +106,7 @@ Lo siento, el servicio de chat no está disponible en este momento. Esto puede d
 • Revisar la información en la sección "Información Útil"
 • Intentar nuevamente en unos minutos
 
-Si eres desarrollador, asegúrate de que el servidor backend esté corriendo en \`http://localhost:3001\``
+Si eres desarrollador, asegúrate de que el servidor backend esté corriendo en \`${config.api.baseURL.replace('/api', '')}\``
       } else if (error.message.includes('comunicarme con la IA') || error.message.includes('IA')) {
         errorContent = `🤖 **Servicio de IA temporalmente no disponible**
 
