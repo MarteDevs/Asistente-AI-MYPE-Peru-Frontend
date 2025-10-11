@@ -306,17 +306,18 @@
       <div class="card-body">
         <div class="grid md:grid-cols-2 gap-6">
           <div>
-            <h4 class="font-semibold text-gray-900 mb-2">{{ assistantInfo.name }}</h4>
-            <p class="text-gray-600 mb-4">{{ assistantInfo.description }}</p>
+            <h4 class="font-semibold text-gray-900 mb-2">{{ assistantDisplayName }}</h4>
+            <p class="text-gray-600 mb-4">{{ assistantDescription }}</p>
             <div class="flex items-center space-x-2">
-              <span class="badge badge-info">{{ assistantInfo.model }}</span>
-              <span class="badge badge-success">{{ assistantInfo.version }}</span>
+              <span v-if="assistantInfo.model" class="badge badge-info">{{ assistantInfo.model }}</span>
+              <span v-if="assistantInfo.version" class="badge badge-success">v{{ assistantInfo.version }}</span>
+              <span v-if="availabilityLabel" class="badge" :class="assistantInfo.available ? 'badge-success' : 'badge-info'">{{ availabilityLabel }}</span>
             </div>
           </div>
           <div>
-            <h4 class="font-semibold text-gray-900 mb-2">Especialidades</h4>
+            <h4 class="font-semibold text-gray-900 mb-2">Especialidades y capacidades</h4>
             <ul class="text-gray-600 space-y-1">
-              <li v-for="specialty in assistantInfo.specialties" :key="specialty">
+              <li v-for="specialty in assistantSpecialties" :key="specialty">
                 • {{ specialty }}
               </li>
             </ul>
@@ -369,6 +370,39 @@ const isValidMessage = computed(() => {
 // Referencias locales
 const messageInput = ref(null)
 const messageValidationError = ref('')
+
+// Información del asistente con valores actuales y fallbacks
+const assistantDisplayName = computed(() => {
+  const name = assistantInfo.value?.name
+  if (!name || /AI-MYPE/i.test(name)) return 'LEGALYTH IA'
+  return name
+})
+
+const assistantDescription = computed(() => {
+  const desc = assistantInfo.value?.description
+  return (
+    desc ||
+    'Asistente virtual especializado en ayudar a emprendedores peruanos a formalizarse y gestionar obligaciones tributarias con información actualizada.'
+  )
+})
+
+const assistantSpecialties = computed(() => {
+  const specs = assistantInfo.value?.specialties || assistantInfo.value?.capabilities
+  if (Array.isArray(specs) && specs.length > 0) return specs
+  return [
+    'Información sobre regímenes tributarios',
+    'Asesoría en formalización de empresas',
+    'Orientación sobre beneficios y obligaciones MYPE',
+    'Consejos de gestión empresarial',
+    'Programas de apoyo gubernamental',
+  ]
+})
+
+const availabilityLabel = computed(() => {
+  if (assistantInfo.value?.available === true) return 'Disponible'
+  if (assistantInfo.value?.available === false) return 'No disponible'
+  return ''
+})
 
 // Métodos
 const handleSendMessage = async () => {

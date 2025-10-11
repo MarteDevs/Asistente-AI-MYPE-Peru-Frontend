@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { useApi } from './useApi.js'
 import { taxRegimeService } from '../services/index.js'
+import { buildRecommendationFromIncome } from './taxRules.js'
 
 /**
  * Composable para manejar operaciones de regímenes tributarios
@@ -19,47 +20,10 @@ export function useTaxRegime() {
    */
   const calculateRegime = async (income) => {
     try {
-      const result = await execute(() => taxRegimeService.calculate(income))
-      
-      // Mapear la respuesta de la API al formato esperado por el componente
-      if (result && result.data) {
-        const apiData = result.data
-        
-        // Calcular impuesto estimado basado en el régimen recomendado
-        const monthlyIncome = apiData.details?.monthlyIncome || Number(income)
-        const annualIncome = apiData.details?.annualIncome || (Number(income) * 12)
-        
-        // Estimación básica de impuestos según el régimen
-        let estimatedMonthlyTax = 0
-        if (apiData.regime?.includes('MYPE')) {
-          // MYPE Tributario: aproximadamente 1% de ingresos netos
-          estimatedMonthlyTax = monthlyIncome * 0.01
-        } else if (apiData.regime?.includes('General')) {
-          // Régimen General: aproximadamente 29.5% de utilidades (estimamos 20% de utilidad)
-          estimatedMonthlyTax = monthlyIncome * 0.20 * 0.295
-        } else {
-          // Otros regímenes: estimación conservadora
-          estimatedMonthlyTax = monthlyIncome * 0.015
-        }
-        
-        recommendation.value = {
-          regime: apiData.regime,
-          description: apiData.message,
-          monthlyTax: apiData.payment || estimatedMonthlyTax,
-          monthlyIncome: monthlyIncome,
-          annualIncome: annualIncome,
-          taxType: apiData.details?.taxType || 'Pago mensual estimado',
-          igvIncluded: apiData.details?.igvIncluded || false,
-          benefits: apiData.benefits || [],
-          requirements: apiData.requirements || [
-            'Llevar contabilidad completa',
-            'Presentar declaraciones mensuales',
-            'Emitir comprobantes de pago electrónicos'
-          ]
-        }
-      }
-      
-      return result
+      // Calcular localmente según documento_consolidado_mypes.md
+      const localRec = buildRecommendationFromIncome(income)
+      recommendation.value = localRec
+      return localRec
     } catch (error) {
       console.error('Error calculando régimen:', error)
       throw error

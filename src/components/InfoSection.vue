@@ -182,15 +182,12 @@
         </ul>
       </div>
 
-      <!-- UIT 2025 -->
+      <!-- UIT 2025 (dinámico) -->
       <div class="card p-4 sm:p-6">
         <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">UIT 2025</h3>
         <div class="text-xs text-gray-500 space-y-1">
-          <p><strong>Valor:</strong> S/ 5,350.00</p>
-          <p>15 UIT = S/ 80,250</p>
-          <p>300 UIT = S/ 1,605,000</p>
-          <p>500 UIT = S/ 2,675,000</p>
-          <p>1,700 UIT = S/ 9,095,000</p>
+          <p><strong>Valor:</strong> {{ formatCurrency(uit) }}</p>
+          <p v-for="k in [15, 300, 500, 1700]" :key="k">{{ k }} UIT = {{ formatCurrency(conversions[k] || k * uit) }}</p>
         </div>
       </div>
     </div>
@@ -278,5 +275,17 @@
 </template>
 
 <script setup>
-// Este componente es principalmente estático, no requiere lógica compleja
+import { consolidatedConfig } from '../composables/mdConfig.js'
+
+const uit = consolidatedConfig.uit
+const conversions = consolidatedConfig.conversions
+
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('es-PE', {
+    style: 'currency',
+    currency: 'PEN',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  }).format(amount)
+}
 </script>

@@ -154,6 +154,15 @@
                   <p class="text-3xl lg:text-4xl font-bold text-primary-700">
                     {{ formatCurrency(recommendation.monthlyTax) }}
                   </p>
+                  <p class="text-xs lg:text-sm text-primary-700 font-medium">
+                    {{ recommendation.taxType }}
+                  </p>
+                  <p v-if="recommendation.monthlyRateApplied" class="text-xs lg:text-sm text-primary-700">
+                    Tasa aplicada: {{ (recommendation.monthlyRateApplied * 100).toFixed(1) }}%
+                  </p>
+                  <p v-if="recommendation.quotaCategory" class="text-xs lg:text-sm text-primary-700">
+                    {{ recommendation.quotaCategory }}
+                  </p>
                   <p class="text-xs lg:text-sm text-primary-600">
                     Ahorro anual estimado vs otros regímenes
                   </p>
@@ -176,9 +185,17 @@
                     <span class="text-gray-600 font-medium">Ingreso anual:</span>
                     <span class="font-bold text-gray-900 text-lg">{{ formatCurrency(recommendation.annualIncome) }}</span>
                   </div>
+                  <div v-if="recommendation.igvApplicable" class="flex justify-between items-center py-2 border-b border-gray-200">
+                    <span class="text-gray-600 font-medium">IGV aplicable:</span>
+                    <span class="font-bold text-gray-900 text-lg">{{ (recommendation.igvRate * 100).toFixed(0) }}%</span>
+                  </div>
                   <div class="flex justify-between items-center py-2">
                     <span class="text-gray-600 font-medium">Impuesto anual:</span>
                     <span class="font-bold text-primary-600 text-lg">{{ formatCurrency(recommendation.monthlyTax * 12) }}</span>
+                  </div>
+                  <div v-if="recommendation.annualRegRateApplied" class="flex justify-between items-center py-2">
+                    <span class="text-gray-600 font-medium">Regularización anual IR:</span>
+                    <span class="font-bold text-primary-600 text-lg">{{ (recommendation.annualRegRateApplied * 100).toFixed(1) }}%</span>
                   </div>
                 </div>
               </div>
