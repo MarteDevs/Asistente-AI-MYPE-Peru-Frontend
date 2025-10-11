@@ -8,7 +8,7 @@
         </svg>
       </div>
       <h1 class="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 lg:mb-8">
-        AI-MYPE Perú
+        LEGALYTH IA
       </h1>
       <p class="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
         Tu asistente inteligente para micro y pequeñas empresas en Perú. 
@@ -89,52 +89,121 @@
       </div>
     </div>
 
-    <!-- Regímenes tributarios -->
+    <!-- Regímenes tributarios actualizados -->
     <div class="card p-4 sm:p-6">
       <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">Regímenes Tributarios en Perú</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <!-- NRUS -->
         <div class="border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow">
           <div class="flex items-center space-x-2 mb-3">
             <div class="w-3 h-3 bg-green-500 rounded-full flex-shrink-0"></div>
-            <h4 class="font-semibold text-gray-900 text-sm sm:text-base">Nuevo RUS</h4>
+            <h4 class="font-semibold text-gray-900 text-sm sm:text-base">NRUS</h4>
           </div>
           <p class="text-xs sm:text-sm text-gray-600 mb-3 leading-relaxed">
-            Para pequeños negocios con ingresos y compras limitadas.
+            Personas naturales y oficios con clientes finales.
           </p>
           <div class="text-xs text-gray-500 space-y-1">
-            <p><strong>Límite:</strong> Hasta S/ 8,000 mensuales</p>
-            <p><strong>Cuota:</strong> Fija según categoría</p>
+            <p><strong>Límites:</strong> Ingresos y compras hasta S/ 8,000 mensuales; activos fijos ≤ S/ 70,000</p>
+            <p><strong>Cuotas:</strong> Cat. 1: S/ 20 · Cat. 2: S/ 50 · Agrícola: S/ 0</p>
+            <p><strong>Comprobantes:</strong> Boletas, tickets (sin crédito fiscal)</p>
           </div>
         </div>
 
+        <!-- RER -->
         <div class="border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow">
           <div class="flex items-center space-x-2 mb-3">
             <div class="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0"></div>
-            <h4 class="font-semibold text-gray-900 text-sm sm:text-base">Régimen Especial</h4>
+            <h4 class="font-semibold text-gray-900 text-sm sm:text-base">RER</h4>
           </div>
           <p class="text-xs sm:text-sm text-gray-600 mb-3 leading-relaxed">
-            Para empresas con ingresos moderados y mayor flexibilidad.
+            PN o PJ que comercializan bienes o prestan servicios.
           </p>
           <div class="text-xs text-gray-500 space-y-1">
-            <p><strong>Límite:</strong> Hasta S/ 525,000 anuales</p>
-            <p><strong>Tasa:</strong> 1.5% de ingresos netos</p>
+            <p><strong>Límites:</strong> Ingresos y compras ≤ S/ 525,000/año; activos ≤ S/ 126,000; hasta 10 trabajadores/turno</p>
+            <p><strong>Impuestos:</strong> Renta 1.5% mensual · IGV 18%</p>
+            <p><strong>Registros:</strong> Compras y Ventas</p>
           </div>
         </div>
 
-        <div class="border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow sm:col-span-2 lg:col-span-1">
+        <!-- RMT -->
+        <div class="border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow">
           <div class="flex items-center space-x-2 mb-3">
             <div class="w-3 h-3 bg-purple-500 rounded-full flex-shrink-0"></div>
+            <h4 class="font-semibold text-gray-900 text-sm sm:text-base">RMT</h4>
+          </div>
+          <p class="text-xs sm:text-sm text-gray-600 mb-3 leading-relaxed">
+            MYPE con rentas de tercera categoría.
+          </p>
+          <div class="text-xs text-gray-500 space-y-1">
+            <p><strong>Límite:</strong> Ingresos netos hasta 1,700 UIT/año</p>
+            <p><strong>Mensual:</strong> ≤ 300 UIT: 1% · > 300 UIT: 1.5% o coeficiente</p>
+            <p><strong>Anual:</strong> Hasta 15 UIT: 10% · Más de 15 UIT: 29.5%</p>
+            <p><strong>Libros:</strong> Según ingresos (Ventas/Compras/Diario simplificado, etc.)</p>
+          </div>
+        </div>
+
+        <!-- Régimen General -->
+        <div class="border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow">
+          <div class="flex items-center space-x-2 mb-3">
+            <div class="w-3 h-3 bg-indigo-500 rounded-full flex-shrink-0"></div>
             <h4 class="font-semibold text-gray-900 text-sm sm:text-base">Régimen General</h4>
           </div>
           <p class="text-xs sm:text-sm text-gray-600 mb-3 leading-relaxed">
-            Para empresas de cualquier tamaño sin límites de ingresos.
+            Sin límites de ingresos; contabilidad completa.
           </p>
           <div class="text-xs text-gray-500 space-y-1">
-            <p><strong>Límite:</strong> Sin límite</p>
-            <p><strong>Tasa:</strong> 29.5% sobre utilidades</p>
+            <p><strong>Tasa:</strong> 29.5% sobre utilidad anual</p>
+            <p><strong>Obligaciones:</strong> Libros electrónicos, balances, estados financieros</p>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Registros contables y UIT -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+      <!-- Registro de Compras -->
+      <div class="card p-4 sm:p-6">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">Registro de Compras</h3>
+        <p class="text-xs sm:text-sm text-gray-600 mb-2">Libro obligatorio para detallar compras y gastos de periodo.</p>
+        <ul class="text-xs text-gray-500 space-y-1">
+          <li><strong>Obligados:</strong> Contribuyentes RER y RMT; actividades gravadas con IGV</li>
+          <li><strong>Incluye:</strong> Doc. y número, fechas, proveedor, descripción, montos y crédito fiscal</li>
+        </ul>
+      </div>
+
+      <!-- Registro de Ventas -->
+      <div class="card p-4 sm:p-6">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">Registro de Ventas</h3>
+        <p class="text-xs sm:text-sm text-gray-600 mb-2">Anota cronológica y correlativamente todas las ventas y operaciones.</p>
+        <ul class="text-xs text-gray-500 space-y-1">
+          <li><strong>Obligados:</strong> Igual que Compras; desde 2023 RVIE gradual</li>
+          <li><strong>Incluye:</strong> Correlativo, fechas, comprobantes, cliente, operación, producto/servicio, importe</li>
+          <li><strong>Formalidad:</strong> Legalización ante Juez de Paz Letrado o Notario</li>
+        </ul>
+      </div>
+
+      <!-- UIT 2025 -->
+      <div class="card p-4 sm:p-6">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">UIT 2025</h3>
+        <div class="text-xs text-gray-500 space-y-1">
+          <p><strong>Valor:</strong> S/ 5,350.00</p>
+          <p>15 UIT = S/ 80,250</p>
+          <p>300 UIT = S/ 1,605,000</p>
+          <p>500 UIT = S/ 2,675,000</p>
+          <p>1,700 UIT = S/ 9,095,000</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conclusiones y recomendaciones -->
+    <div class="card p-4 sm:p-6">
+      <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Conclusiones y Recomendaciones</h3>
+      <ul class="list-disc pl-5 text-sm sm:text-base text-gray-700 space-y-2">
+        <li>Elegir régimen según ingresos, actividad, capacidad administrativa y tipo de cliente.</li>
+        <li>Registros contables son clave para cumplimiento, crédito fiscal y decisiones.</li>
+        <li>La formalización permite acceder a financiamiento, licitaciones y confianza.</li>
+        <li>Mantenerse actualizado en UIT, cambios tributarios y obligaciones electrónicas.</li>
+      </ul>
     </div>
 
     <!-- Información adicional -->

@@ -16,11 +16,11 @@ const handleTabChange = (tabId) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex flex-col">
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50 to-cyan-100 flex flex-col">
     <!-- Header -->
-    <AppHeader 
-      :active-tab="activeTab" 
-      @tab-change="handleTabChange" 
+    <AppHeader
+      :active-tab="activeTab"
+      @tab-change="handleTabChange"
     />
 
     <!-- Contenido principal -->
@@ -35,12 +35,12 @@ const handleTabChange = (tabId) => {
                 Calculadora de Régimen Tributario
               </h1>
               <p class="text-xl lg:text-2xl xl:text-3xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                Descubre cuál es el régimen tributario más conveniente para tu empresa 
+                Descubre cuál es el régimen tributario más conveniente para tu empresa
                 basándose en tus ingresos mensuales y características del negocio.
               </p>
             </div>
           </div>
-          
+
           <!-- Calculator Container -->
           <div class="max-w-6xl mx-auto">
             <TaxRegimeCalculator />
@@ -53,15 +53,15 @@ const handleTabChange = (tabId) => {
           <div class="text-center mb-12 lg:mb-20">
             <div class="max-w-5xl mx-auto">
               <h1 class="text-4xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 lg:mb-8 leading-tight">
-                Asistente de IA para MYPE
+                LEGALYTH IA
               </h1>
               <p class="text-xl lg:text-2xl xl:text-3xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                Chatea con nuestro asistente especializado en micro y pequeñas empresas. 
-                Obtén respuestas rápidas y precisas sobre temas empresariales y tributarios.
+                Asistente legal y tributario para micro y pequeñas empresas.
+                Obtén respuestas rápidas y precisas sobre temas legales y fiscales.
               </p>
             </div>
           </div>
-          
+
           <!-- Chat Container -->
           <div class="max-w-6xl mx-auto">
             <ChatAssistant />

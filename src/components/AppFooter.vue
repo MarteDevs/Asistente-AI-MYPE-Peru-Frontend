@@ -1,16 +1,14 @@
 <template>
-  <footer class="bg-gradient-to-r from-gray-50 to-slate-100 border-t border-gray-200 mt-auto">
+  <footer class="bg-gradient-to-r from-teal-50 to-slate-100 border-t border-teal-200 mt-auto">
     <div class="max-w-[1400px] mx-auto px-4 lg:px-8 xl:px-12 py-8 lg:py-12">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
         <!-- Información del proyecto -->
         <div class="lg:col-span-1">
           <div class="flex items-center space-x-4 mb-6">
-            <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-              <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
+            <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg border border-teal-300 bg-teal-50">
+              <img src="/src/assets/legalyth-logo.svg" alt="LEGALYTH IA" class="w-6 h-6 lg:w-8 lg:h-8" />
             </div>
-            <h3 class="text-xl lg:text-2xl font-bold text-gray-900">AI-MYPE Perú</h3>
+            <h3 class="text-xl lg:text-2xl font-bold text-gray-900">LEGALYTH IA</h3>
           </div>
           <p class="text-gray-600 text-base lg:text-lg leading-relaxed mb-6">
             Plataforma especializada en brindar asistencia a micro y pequeñas empresas en Perú, 
@@ -103,7 +101,7 @@
       <div class="border-t border-gray-300 mt-8 lg:mt-12 pt-6 lg:pt-8">
         <div class="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0 text-center lg:text-left">
           <div class="text-sm lg:text-base text-gray-500 leading-relaxed">
-            © {{ currentYear }} AI-MYPE Perú. Desarrollado para apoyar a las micro y pequeñas empresas del Perú.
+            © {{ currentYear }} LEGALYTH IA. Asistente legal y tributario para MYPE.
           </div>
           
           <div class="flex items-center justify-center text-sm lg:text-base text-gray-500">

@@ -5,7 +5,7 @@
       class="bg-white rounded-2xl shadow-xl border border-gray-100 h-[700px] lg:h-[800px] flex flex-col overflow-hidden"
     >
       <!-- Chat Header -->
-      <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 lg:px-8 py-6 lg:py-8">
+      <div class="bg-gradient-to-r from-teal-600 to-cyan-700 px-6 lg:px-8 py-6 lg:py-8">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <div
@@ -26,9 +26,9 @@
               </svg>
             </div>
             <div>
-              <h3 class="text-xl lg:text-2xl font-bold text-white">Asistente AI-MYPE Perú</h3>
-              <p class="text-blue-100 text-sm lg:text-base">
-                Tu especialista en micro y pequeñas empresas • En línea
+              <h3 class="text-xl lg:text-2xl font-bold text-white">LEGALYTH IA</h3>
+              <p class="text-teal-100 text-sm lg:text-base">
+                Asistente legal y tributario para MYPE • En línea
               </p>
             </div>
           </div>
@@ -75,7 +75,7 @@
             class="w-20 h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
           >
             <svg
-              class="w-10 h-10 lg:w-12 lg:h-12 text-blue-600"
+              class="w-10 h-10 lg:w-12 lg:h-12 text-teal-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -89,7 +89,7 @@
             </svg>
           </div>
           <h3 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
-            ¡Hola! Soy tu asistente AI-MYPE
+            ¡Hola! Soy LEGALYTH IA
           </h3>
           <p class="text-lg lg:text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
             Estoy aquí para ayudarte con información sobre regímenes tributarios, formalización de

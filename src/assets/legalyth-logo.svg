@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" aria-labelledby="title" role="img">
+  <title>LEGALYTH IA</title>
+  <defs>
+    <linearGradient id="brainGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2CA8A8"/>
+      <stop offset="1" stop-color="#1E8096"/>
+    </linearGradient>
+  </defs>
+  <!-- Contorno del cerebro -->
+  <g fill="none" stroke="url(#brainGradient)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M36 30c-10 0-18 8-18 18 0 .7.05 1.38.14 2.05-5.48 3.52-9.14 9.74-9.14 16.95 0 11.6 9.4 21 21 21h4"/>
+    <path d="M92 30c10 0 18 8 18 18 0 .7-.05 1.38-.14 2.05 5.48 3.52 9.14 9.74 9.14 16.95 0 11.6-9.4 21-21 21h-4"/>
+    <path d="M40 25c0-7 6-13 13-13 4.43 0 8.36 2.17 10.77 5.49C66.96 14.17 70.88 12 75.32 12c7 0 12.68 5.73 12.68 12.8 0 1.65-.31 3.23-.88 4.68"/>
+    <path d="M88 103c0 7-5.5 13-12.5 13-4.35 0-8.18-2.15-10.58-5.41C62.52 116.85 58.69 119 54.33 119 47.33 119 41 112.99 41 106"/>
+  </g>
+
+  <!-- Balanza al centro -->
+  <g fill="#0B4254">
+    <!-- Poste central -->
+    <rect x="61" y="44" width="6" height="36" rx="3"/>
+    <!-- Brazo superior -->
+    <rect x="44" y="44" width="40" height="6" rx="3"/>
+    <!-- Cables -->
+    <rect x="48" y="50" width="2" height="16" rx="1"/>
+    <rect x="78" y="50" width="2" height="16" rx="1"/>
+    <!-- Platos -->
+    <path d="M40 72c0 6 6 11 14 11s14-5 14-11H40z" fill="#1FA3A3"/>
+    <path d="M60 72h28c0 6-6 11-14 11s-14-5-14-11z" fill="#1FA3A3"/>
+  </g>
+</svg>

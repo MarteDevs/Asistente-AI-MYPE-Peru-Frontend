@@ -1,22 +1,20 @@
 <template>
-  <header class="bg-white/95 backdrop-blur-sm shadow-lg border-b border-gray-200 sticky top-0 z-50">
+  <header class="bg-white/95 backdrop-blur-sm shadow-lg border-b border-teal-200 sticky top-0 z-50">
     <div class="max-w-[1400px] mx-auto px-4 lg:px-8 xl:px-12">
       <div class="flex justify-between items-center h-16 lg:h-20">
         <!-- Logo y título -->
         <div class="flex items-center space-x-3 lg:space-x-6 min-w-0 flex-1">
           <div class="flex-shrink-0">
-            <div class="w-10 h-10 lg:w-14 lg:h-14 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg">
-              <svg class="w-5 h-5 lg:w-8 lg:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
+            <div class="w-10 h-10 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center shadow-lg border border-teal-300 bg-teal-50">
+              <img src="/src/assets/legalyth-logo.svg" alt="LEGALYTH IA" class="w-7 h-7 lg:w-10 lg:h-10" />
             </div>
           </div>
           <div class="min-w-0 flex-1">
-            <h1 class="text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 truncate">
-              AI-MYPE Perú
+            <h1 class="text-xl lg:text-2xl xl:text-3xl font-bold text-slate-900 truncate">
+              LEGALYTH IA
             </h1>
-            <p class="text-sm lg:text-base text-gray-500 hidden sm:block truncate">
-              Asistente para Micro y Pequeñas Empresas
+            <p class="text-sm lg:text-base text-slate-500 hidden sm:block truncate">
+              Asistente legal y tributario para MYPE
             </p>
           </div>
         </div>
@@ -29,8 +27,8 @@
             @click="setActiveTab(item.id)"
             class="flex items-center space-x-3 px-4 lg:px-6 py-3 lg:py-4 rounded-xl text-base lg:text-lg font-medium transition-all duration-200 whitespace-nowrap"
             :class="activeTab === item.id 
-              ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg transform scale-105' 
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 hover:shadow-md'"
+              ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg transform scale-105' 
+              : 'text-gray-600 hover:text-gray-900 hover:bg-teal-50 hover:shadow-md'"
           >
             <component :is="item.icon" class="w-5 h-5 lg:w-6 lg:h-6" />
             <span>{{ item.label }}</span>
@@ -45,8 +43,8 @@
             @click="setActiveTab(item.id)"
             class="flex items-center justify-center p-2 rounded-lg transition-colors"
             :class="activeTab === item.id 
-              ? 'bg-blue-100 text-blue-700' 
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'"
+              ? 'bg-teal-100 text-teal-700' 
+              : 'text-gray-600 hover:text-gray-900 hover:bg-teal-50'"
             :title="item.label"
           >
             <component :is="item.icon" class="w-5 h-5" />
@@ -87,7 +85,7 @@
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <div v-if="showMobileMenu" class="md:hidden border-t border-gray-200 py-3 bg-gray-50">
+        <div v-if="showMobileMenu" class="md:hidden border-t border-teal-200 py-3 bg-teal-50/30">
           <div class="space-y-1 px-2">
             <button
               v-for="item in navigationItems"
@@ -95,14 +93,14 @@
               @click="setActiveTab(item.id)"
               class="flex items-center space-x-3 w-full px-3 py-3 rounded-lg text-sm font-medium transition-colors"
               :class="activeTab === item.id 
-                  ? 'bg-blue-100 text-blue-700 shadow-sm' 
+                  ? 'bg-teal-100 text-teal-700 shadow-sm' 
                 : 'text-gray-700 hover:text-gray-900 hover:bg-white'"
             >
               <component :is="item.icon" class="w-5 h-5 flex-shrink-0" />
               <span>{{ item.label }}</span>
               <svg 
                 v-if="activeTab === item.id"
-                class="w-4 h-4 ml-auto text-blue-600" 
+                class="w-4 h-4 ml-auto text-teal-600" 
                 fill="currentColor" 
                 viewBox="0 0 20 20"
               >
