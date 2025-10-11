@@ -200,8 +200,19 @@
                 </div>
               </div>
               
-              <!-- Porcentaje de impuestos -->
-              <div class="bg-blue-50 rounded-2xl p-6 lg:p-8 text-center border border-blue-200">
+              <!-- Carga tributaria / NRUS sin porcentaje -->
+              <div v-if="recommendation.regime === 'Nuevo RUS'" class="bg-blue-50 rounded-2xl p-6 lg:p-8 text-center border border-blue-200">
+                <p class="text-sm text-blue-600 font-semibold mb-2">
+                  📈 Carga Tributaria
+                </p>
+                <p class="text-2xl lg:text-3xl font-bold text-blue-700">
+                  No aplica
+                </p>
+                <p class="text-xs text-blue-600 mt-1">
+                  Cuota fija mensual: {{ formatCurrency(recommendation.monthlyTax) }} ({{ recommendation.quotaCategory }})
+                </p>
+              </div>
+              <div v-else class="bg-blue-50 rounded-2xl p-6 lg:p-8 text-center border border-blue-200">
                 <p class="text-sm text-blue-600 font-semibold mb-2">
                   📈 Carga Tributaria
                 </p>
