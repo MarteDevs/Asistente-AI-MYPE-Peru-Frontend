@@ -1,26 +1,81 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 import TaxRegimeCalculator from './components/TaxRegimeCalculator.vue'
 import ChatAssistant from './components/ChatAssistant.vue'
 import InfoSection from './components/InfoSection.vue'
+import PaymentModal from './components/PaymentModal.vue'
+import AuthModal from './components/AuthModal.vue'
+import { useGlobalAuth } from './composables/useAuth.js'
+
+// Composables
+const { queryLimits } = useGlobalAuth()
 
 // Estado de la aplicación
 const activeTab = ref('calculator')
+
+// Estado de los modales
+const showPaymentModal = ref(false)
+const showAuthModal = ref(false)
+const authModalMode = ref('login')
 
 // Métodos
 const handleTabChange = (tabId) => {
   activeTab.value = tabId
 }
+
+const openPaymentModal = () => {
+  showPaymentModal.value = true
+}
+
+const closePaymentModal = () => {
+  showPaymentModal.value = false
+}
+
+const openAuthModal = (mode = 'login') => {
+  authModalMode.value = mode
+  showAuthModal.value = true
+}
+
+const closeAuthModal = () => {
+  showAuthModal.value = false
+}
+
+const handlePaymentModalOpenAuth = (mode) => {
+  openAuthModal(mode)
+}
+
+const handleAuthSuccess = (data) => {
+  // Después de autenticarse exitosamente, abrir el modal de pago
+  setTimeout(() => {
+    openPaymentModal()
+  }, 500)
+}
+
+const handlePaymentSuccess = (data) => {
+  // Manejar éxito del pago si es necesario
+  console.log('Pago exitoso:', data)
+}
+
+// Escuchar eventos globales para abrir el modal de pago
+onMounted(() => {
+  window.addEventListener('showPaymentModal', openPaymentModal)
+  
+  // Cleanup
+  return () => {
+    window.removeEventListener('showPaymentModal', openPaymentModal)
+  }
+})
 </script>
 
 <template>
   <div class="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50 to-cyan-100 flex flex-col">
     <!-- Header -->
-    <AppHeader
-      :active-tab="activeTab"
+    <AppHeader 
+      :active-tab="activeTab" 
       @tab-change="handleTabChange"
+      @open-auth="openAuthModal"
     />
 
     <!-- Contenido principal -->
@@ -79,6 +134,22 @@ const handleTabChange = (tabId) => {
 
     <!-- Footer -->
     <AppFooter />
+
+    <!-- Modales -->
+    <PaymentModal
+      :is-open="showPaymentModal"
+      :query-limits="queryLimits"
+      @close="closePaymentModal"
+      @success="handlePaymentSuccess"
+      @open-auth="handlePaymentModalOpenAuth"
+    />
+
+    <AuthModal
+      :is-open="showAuthModal"
+      :initial-mode="authModalMode"
+      @close="closeAuthModal"
+      @success="handleAuthSuccess"
+    />
   </div>
 </template>
 

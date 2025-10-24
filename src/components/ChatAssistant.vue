@@ -55,6 +55,20 @@
               </svg>
             </button>
 
+            <!-- Indicador de intentos restantes -->
+            <div 
+              v-if="!trialStatus.isAuthenticated && trialStatus.remainingAttempts >= 0"
+              class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2"
+              :class="{
+                'bg-yellow-500/20': trialStatus.remainingAttempts <= 2,
+                'bg-red-500/20': trialStatus.remainingAttempts === 0
+              }"
+            >
+              <span class="text-sm lg:text-base text-white font-medium">
+                {{ trialStatus.remainingAttempts === 0 ? 'Sin intentos' : `${trialStatus.remainingAttempts} intentos restantes` }}
+              </span>
+            </div>
+
             <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
               <span class="text-sm lg:text-base text-white font-medium">
                 {{ messageCount }} mensajes
@@ -91,10 +105,28 @@
           <h3 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
             ¡Hola! Soy LEGALYTH IA
           </h3>
-          <p class="text-lg lg:text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p class="text-lg lg:text-xl text-gray-600 mb-4 max-w-2xl mx-auto leading-relaxed">
             Estoy aquí para ayudarte con información sobre regímenes tributarios, formalización de
             empresas, beneficios MYPE y mucho más.
           </p>
+
+          <!-- Información de intentos gratuitos -->
+          <div 
+            v-if="!trialStatus.isAuthenticated"
+            class="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-xl max-w-2xl mx-auto"
+          >
+            <div class="flex items-center justify-center mb-2">
+              <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span class="text-blue-800 font-semibold">Prueba gratuita</span>
+            </div>
+            <p class="text-blue-700 text-sm">
+              Tienes <strong>{{ trialStatus.remainingAttempts }} de {{ trialStatus.maxAttempts }}</strong> consultas gratuitas restantes.
+              <br>
+              <span class="text-blue-600">Regístrate para obtener acceso ilimitado por solo S/15.00 PEN</span>
+            </p>
+          </div>
 
           <!-- Mensajes sugeridos -->
           <div class="space-y-6">
@@ -114,6 +146,21 @@
                 {{ suggestion }}
               </button>
             </div>
+          </div>
+        </div>
+
+        <!-- Botones de acceso rápido (siempre visibles) -->
+        <div v-if="hasMessages" class="mb-6">
+          <div class="flex flex-wrap gap-2 justify-center">
+            <button
+              v-for="quickButton in quickActionButtons"
+              :key="quickButton.text"
+              @click="sendSuggestedMessage(quickButton.message)"
+              class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-sm rounded-full border border-blue-300 hover:border-blue-400 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105 font-medium"
+              :disabled="loading"
+            >
+              {{ quickButton.text }}
+            </button>
           </div>
         </div>
 
@@ -167,6 +214,25 @@
               ></div>
             </div>
 
+            <!-- Mensaje de límite alcanzado -->
+            <div
+              v-else-if="message.type === 'limit'"
+              class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 lg:p-6"
+            >
+              <div
+                class="text-yellow-800 text-base lg:text-lg leading-relaxed whitespace-pre-line"
+                v-html="formatAssistantMessage(message.content)"
+              ></div>
+              <div class="mt-4 flex justify-center">
+                <button
+                  @click="$emit('showPaymentModal')"
+                  class="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200"
+                >
+                  💎 Obtener Acceso Premium
+                </button>
+              </div>
+            </div>
+
             <!-- Timestamp -->
             <div class="text-xs lg:text-sm mt-2 opacity-70">
               {{ formatMessageTime(message.timestamp) }}
@@ -208,7 +274,8 @@
                 @keydown.enter.prevent="handleKeyDown"
                 @input="adjustTextareaHeight"
                 ref="messageInput"
-                :disabled="loading"
+                :disabled="loading || !canUseChat"
+                :placeholder="!canUseChat ? 'Regístrate para continuar chateando...' : 'Escribe tu pregunta sobre regímenes tributarios, formalización, beneficios MYPE...'"
                 style="min-height: 60px; max-height: 200px"
               ></textarea>
 
@@ -258,7 +325,7 @@
 
           <button
             type="submit"
-            :disabled="loading || !isValidMessage"
+            :disabled="loading || !isValidMessage || !canUseChat"
             class="self-start flex-shrink-0 px-6 lg:px-7 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 text-white font-semibold rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-sm transform hover:scale-105 active:scale-95 disabled:scale-100 disabled:cursor-not-allowed"
           >
             <span v-if="loading" class="flex items-center justify-center">
@@ -341,12 +408,15 @@ const {
   loading,
   error,
   sendMessage,
+  getChatHistory,
   clearChat,
   clearError,
   fetchAssistantInfo,
   scrollToBottom,
   formatMessageTime,
   validateMessage,
+  trialStatus,
+  canUseChat,
 } = useChat()
 
 // Mensajes sugeridos
@@ -356,7 +426,33 @@ const suggestedMessages = ref([
   '¿Cuáles son los beneficios MYPE?',
   '¿Qué es el Nuevo RUS?',
   '¿Cómo cambio de régimen?',
-  '¿Qué documentos necesito?',
+  '¿Qué documentos necesito para formalizar?',
+  '¿Cuánto debo pagar de impuestos?',
+  '¿Qué es el Régimen Especial?',
+  '¿Cómo emito comprobantes de pago?',
+  '¿Qué obligaciones tengo como MYPE?',
+  '¿Cómo accedo a programas de apoyo?',
+  '¿Qué es la Planilla Electrónica?'
+])
+
+// Botones de acceso rápido que aparecen siempre
+const quickActionButtons = ref([
+  {
+    text: '📊 Calcular impuestos',
+    message: '¿Puedes ayudarme a calcular cuánto debo pagar de impuestos según mi régimen tributario?'
+  },
+  {
+    text: '📋 Formalizar empresa',
+    message: '¿Cuáles son los pasos completos para formalizar mi empresa como MYPE?'
+  },
+  {
+    text: '💰 Beneficios MYPE',
+    message: '¿Qué beneficios específicos puedo obtener al ser una MYPE formalizada?'
+  },
+  {
+    text: '📄 Documentos necesarios',
+    message: '¿Qué documentos necesito tener al día para cumplir con mis obligaciones tributarias?'
+  }
 ])
 
 // Computed properties
@@ -459,6 +555,8 @@ const getMessageClasses = (type) => {
       return 'bg-gray-100 text-gray-800'
     case 'error':
       return 'bg-red-100 text-red-800 border border-red-200'
+    case 'limit':
+      return 'bg-yellow-50 text-yellow-800 border border-yellow-200'
     default:
       return 'bg-gray-100 text-gray-800'
   }
@@ -499,7 +597,39 @@ const formatErrorMessage = (content) => {
 // Lifecycle
 onMounted(async () => {
   try {
+    // Cargar información del asistente
     await fetchAssistantInfo()
+    
+    // Cargar historial de chat si el usuario está autenticado
+    const token = localStorage.getItem('auth_token')
+    if (token) {
+      try {
+        await getChatHistory()
+      } catch (historyError) {
+        console.error('Error cargando historial de chat:', historyError)
+        // Si hay error cargando historial, mostrar mensaje de bienvenida
+        if (messages.value.length === 0) {
+          const welcomeMessage = {
+            id: 0,
+            type: 'assistant',
+            content: '¡Hola! Soy tu asistente especializado en micro y pequeñas empresas en Perú. Puedo ayudarte con información sobre regímenes tributarios, formalización de empresas, beneficios MYPE y mucho más. ¿En qué puedo ayudarte hoy?',
+            timestamp: new Date(),
+          }
+          messages.value.push(welcomeMessage)
+        }
+      }
+    } else {
+      // Usuario no autenticado, mostrar mensaje de bienvenida
+      if (messages.value.length === 0) {
+        const welcomeMessage = {
+          id: 0,
+          type: 'assistant',
+          content: '¡Hola! Soy tu asistente especializado en micro y pequeñas empresas en Perú. Puedo ayudarte con información sobre regímenes tributarios, formalización de empresas, beneficios MYPE y mucho más. ¿En qué puedo ayudarte hoy?',
+          timestamp: new Date(),
+        }
+        messages.value.push(welcomeMessage)
+      }
+    }
   } catch (err) {
     console.error('Error cargando información del asistente:', err)
   }
