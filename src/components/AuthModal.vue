@@ -304,4 +304,36 @@ watch(() => props.isOpen, (isOpen) => {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* Fix para visibilidad del texto en inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+}
+
+/* Asegurar que el texto sea visible en focus */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+}
+
+/* Estilos para autocompletado */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
 </style>
