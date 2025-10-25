@@ -105,7 +105,7 @@ const trialService = {
    */
   hasPremiumAccess() {
     try {
-      const userStr = localStorage.getItem('user')
+      const userStr = localStorage.getItem('user_data')
       if (!userStr) return false
       
       const user = JSON.parse(userStr)
