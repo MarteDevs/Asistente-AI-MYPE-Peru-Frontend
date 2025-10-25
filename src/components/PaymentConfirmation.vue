@@ -40,7 +40,7 @@
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Duración:</span>
-              <span class="font-medium">1 mes</span>
+              <span class="font-medium">Suscripción mensual</span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Precio:</span>

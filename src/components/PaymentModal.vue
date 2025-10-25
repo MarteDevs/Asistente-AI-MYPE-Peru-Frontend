@@ -102,7 +102,7 @@
               <span class="text-4xl font-bold text-gray-900">S/ 15</span>
               <span class="text-lg text-gray-500 ml-1">.00 PEN</span>
             </div>
-            <p class="text-sm text-gray-600 mt-1">Pago único • Acceso de por vida</p>
+            <p class="text-sm text-gray-600 mt-1">15 soles por suscripción mensual</p>
           </div>
 
           <!-- Current Usage -->
