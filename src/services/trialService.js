@@ -105,13 +105,27 @@ const trialService = {
    */
   hasPremiumAccess() {
     try {
-      const userStr = localStorage.getItem('user_data')
-      if (!userStr) return false
+      // Intentar con ambas claves de localStorage para compatibilidad
+      let userStr = localStorage.getItem('user_data') || localStorage.getItem('user')
+      if (!userStr) {
+        console.log('🔍 [trialService] No se encontró información de usuario en localStorage')
+        return false
+      }
       
       const user = JSON.parse(userStr)
-      return user.hasPremiumAccess === true || user.isPremium === true
+      console.log('🔍 [trialService] Usuario encontrado:', {
+        isPremium: user.isPremium,
+        hasPremiumAccess: user.hasPremiumAccess,
+        userId: user.id || user._id
+      })
+      
+      // Simplificar: usar solo isPremium como fuente de verdad
+      const hasAccess = user.isPremium === true
+      console.log(`🔍 [trialService] Acceso premium: ${hasAccess}`)
+      
+      return hasAccess
     } catch (error) {
-      console.error('Error verificando acceso premium:', error)
+      console.error('❌ [trialService] Error verificando acceso premium:', error)
       return false
     }
   },

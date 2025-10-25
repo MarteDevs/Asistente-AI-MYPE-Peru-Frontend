@@ -6,6 +6,7 @@ import TaxRegimeCalculator from './components/TaxRegimeCalculator.vue'
 import ChatAssistant from './components/ChatAssistant.vue'
 import InfoSection from './components/InfoSection.vue'
 import PaymentModal from './components/PaymentModal.vue'
+import PaymentConfirmation from './components/PaymentConfirmation.vue'
 import AuthModal from './components/AuthModal.vue'
 import { useGlobalAuth } from './composables/useAuth.js'
 
@@ -17,6 +18,7 @@ const activeTab = ref('calculator')
 
 // Estado de los modales
 const showPaymentModal = ref(false)
+const showPaymentConfirmation = ref(false)
 const showAuthModal = ref(false)
 const authModalMode = ref('login')
 
@@ -26,11 +28,27 @@ const handleTabChange = (tabId) => {
 }
 
 const openPaymentModal = () => {
+  // Primero mostrar la confirmación de pago
+  showPaymentConfirmation.value = true
+}
+
+const openPaymentModalDirect = () => {
+  // Abrir directamente el modal de pago (para uso interno)
   showPaymentModal.value = true
 }
 
 const closePaymentModal = () => {
   showPaymentModal.value = false
+}
+
+const closePaymentConfirmation = () => {
+  showPaymentConfirmation.value = false
+}
+
+const confirmPayment = () => {
+  // Cerrar confirmación y abrir modal de pago
+  showPaymentConfirmation.value = false
+  showPaymentModal.value = true
 }
 
 const openAuthModal = (mode = 'login') => {
@@ -47,9 +65,9 @@ const handlePaymentModalOpenAuth = (mode) => {
 }
 
 const handleAuthSuccess = (data) => {
-  // Después de autenticarse exitosamente, abrir el modal de pago
+  // Después de autenticarse exitosamente, abrir el modal de pago directamente
   setTimeout(() => {
-    openPaymentModal()
+    openPaymentModalDirect()
   }, 500)
 }
 
@@ -136,6 +154,12 @@ onMounted(() => {
     <AppFooter />
 
     <!-- Modales -->
+    <PaymentConfirmation
+      :is-open="showPaymentConfirmation"
+      @close="closePaymentConfirmation"
+      @confirm="confirmPayment"
+    />
+
     <PaymentModal
       :is-open="showPaymentModal"
       :query-limits="queryLimits"

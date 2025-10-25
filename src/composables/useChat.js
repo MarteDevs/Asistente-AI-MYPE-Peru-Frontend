@@ -26,8 +26,12 @@ export function useChat() {
     }
 
     // Verificar si el usuario puede usar el chat antes de enviar
+    console.log('🔍 [useChat] Verificando permisos de chat...')
     const chatAccess = trialService.canUseChat()
+    console.log('🔍 [useChat] Resultado de canUseChat:', chatAccess)
+    
     if (!chatAccess.canUse) {
+      console.log('❌ [useChat] Usuario no puede usar el chat:', chatAccess.message)
       // Mostrar mensaje de límite alcanzado
       const limitMessage = {
         id: Date.now(),

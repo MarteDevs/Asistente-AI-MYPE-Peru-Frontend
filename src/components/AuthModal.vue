@@ -59,7 +59,7 @@
             v-model="formData.name"
             type="text"
             required
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
             placeholder="Ingresa tu nombre completo"
           />
         </div>
@@ -74,7 +74,7 @@
             v-model="formData.email"
             type="email"
             required
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
             placeholder="tu@email.com"
           />
         </div>
@@ -91,7 +91,7 @@
               :type="showPassword ? 'text' : 'password'"
               required
               :minlength="isLoginMode ? 1 : 6"
-              class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors text-gray-900 placeholder-gray-500"
+              class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
               :placeholder="isLoginMode ? 'Tu contraseña' : 'Mínimo 6 caracteres'"
             />
             <button

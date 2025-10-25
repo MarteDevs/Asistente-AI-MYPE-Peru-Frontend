@@ -1,18 +1,4 @@
 <template>
-  <!-- Payment Confirmation Modal -->
-  <PaymentConfirmation
-    :is-open="showConfirmation"
-    @close="closeConfirmation"
-    @confirm="confirmPayment"
-  />
-
-  <!-- Payment Success Modal -->
-  <PaymentSuccess
-    :is-open="showSuccess"
-    @close="closeSuccess"
-    @continue="handleSuccessContinue"
-  />
-
   <div
     v-if="isOpen && !userAlreadyHasPremium"
     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
@@ -102,7 +88,7 @@
               <span class="text-4xl font-bold text-gray-900">S/ 15</span>
               <span class="text-lg text-gray-500 ml-1">.00 PEN</span>
             </div>
-            <p class="text-sm text-gray-600 mt-1">15 soles por suscripción mensual</p>
+            <p class="text-sm text-gray-600 mt-1">Pago único • Acceso de por vida</p>
           </div>
 
           <!-- Current Usage -->
@@ -127,7 +113,7 @@
             <!-- Botón principal de pago para usuarios autenticados -->
             <button
               v-if="isAuthenticated"
-              @click="showPaymentConfirmation"
+              @click="createPaymentOrder"
               :disabled="isLoading"
               class="w-full bg-gradient-to-r from-teal-600 to-cyan-700 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:from-teal-700 hover:to-cyan-800 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
@@ -361,8 +347,6 @@ import { ref, computed, watch } from 'vue'
 import { useGlobalAuth } from '@/composables/useAuth'
 import paymentService from '@/services/paymentService'
 import QRCode from './QRCode.vue'
-import PaymentConfirmation from './PaymentConfirmation.vue'
-import PaymentSuccess from './PaymentSuccess.vue'
 
 // Props
 const props = defineProps({
@@ -387,8 +371,6 @@ const isLoading = ref(false)
 const error = ref('')
 const success = ref('')
 const paymentOrder = ref(null)
-const showConfirmation = ref(false)
-const showSuccess = ref(false)
 
 // Computed
 const userAlreadyHasPremium = computed(() => {
@@ -410,6 +392,66 @@ const clearMessages = () => {
 const openAuthModal = (mode) => {
   emit('openAuth', mode)
   closeModal()
+}
+
+/**
+ * Actualiza el estado premium del usuario de forma robusta
+ */
+const updatePremiumStatus = async () => {
+  console.log('🔄 [PaymentModal] Iniciando actualización de estado premium...')
+  
+  try {
+    // 1. Actualizar perfil desde el servidor
+    console.log('📡 [PaymentModal] Obteniendo perfil actualizado del servidor...')
+    await refreshProfile()
+    
+    // 2. Forzar actualización del localStorage con estado premium
+    console.log('💾 [PaymentModal] Actualizando localStorage...')
+    const currentUser = JSON.parse(localStorage.getItem('user_data') || '{}')
+    
+    // Log del estado actual
+    console.log('📊 [PaymentModal] Estado actual del usuario:', {
+      isPremium: currentUser.isPremium,
+      hasPremiumAccess: currentUser.hasPremiumAccess,
+      userId: currentUser.id || currentUser._id
+    })
+    
+    // Actualizar ambas propiedades para compatibilidad
+    currentUser.isPremium = true
+    currentUser.hasPremiumAccess = true
+    
+    // Guardar en localStorage
+    localStorage.setItem('user_data', JSON.stringify(currentUser))
+    
+    // 3. Verificar que se guardó correctamente
+    const verifyUser = JSON.parse(localStorage.getItem('user_data') || '{}')
+    console.log('✅ [PaymentModal] Estado verificado después de actualización:', {
+      isPremium: verifyUser.isPremium,
+      hasPremiumAccess: verifyUser.hasPremiumAccess,
+      userId: verifyUser.id || verifyUser._id
+    })
+    
+    // 4. Emitir evento para que otros componentes se actualicen
+    window.dispatchEvent(new CustomEvent('user:premium-updated', {
+      detail: { isPremium: true, hasPremiumAccess: true }
+    }))
+    
+    console.log('🎉 [PaymentModal] Estado premium actualizado exitosamente')
+    
+  } catch (error) {
+    console.error('❌ [PaymentModal] Error actualizando estado premium:', error)
+    
+    // En caso de error, al menos actualizar localStorage
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('user_data') || '{}')
+      currentUser.isPremium = true
+      currentUser.hasPremiumAccess = true
+      localStorage.setItem('user_data', JSON.stringify(currentUser))
+      console.log('⚠️ [PaymentModal] Estado premium actualizado solo en localStorage como fallback')
+    } catch (fallbackError) {
+      console.error('❌ [PaymentModal] Error en fallback de actualización:', fallbackError)
+    }
+  }
 }
 
 const createPaymentOrder = async () => {
@@ -493,28 +535,15 @@ const checkPaymentStatus = async () => {
       paymentOrder.value.status = response.payment.status
       
       if (response.payment.status === 'completed') {
-        // Actualizar perfil del usuario y localStorage
-        await refreshProfile()
+        success.value = '¡Pago completado exitosamente! Ya tienes acceso premium.'
         
-        // Forzar actualización del localStorage con el estado premium
-        const currentUser = JSON.parse(localStorage.getItem('user_data') || '{}')
-        currentUser.isPremium = true
-        currentUser.hasPremiumAccess = true
-        localStorage.setItem('user_data', JSON.stringify(currentUser))
-        
-        // Asegurar que el usuario tenga un token de autenticación válido
-        if (!localStorage.getItem('auth_token')) {
-          // Generar un token temporal para usuarios premium
-          const tempToken = 'premium-user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9)
-          localStorage.setItem('auth_token', tempToken)
-        }
-        
-        // Mostrar modal de éxito en lugar del mensaje
-        showSuccess.value = true
+        // Actualizar estado premium de forma robusta
+        await updatePremiumStatus()
         
         setTimeout(() => {
           emit('success', { type: 'payment', data: response.payment })
-        }, 1000)
+          closeModal()
+        }, 2000)
       } else if (response.payment.status === 'failed') {
         error.value = 'El pago ha fallado. Por favor, intenta nuevamente.'
       } else {
@@ -543,28 +572,15 @@ const processPayment = async () => {
     })
 
     if (response.success) {
-      // Actualizar perfil del usuario y localStorage
-      await refreshProfile()
+      success.value = '¡Pago procesado exitosamente! Ya tienes acceso premium.'
       
-      // Forzar actualización del localStorage con el estado premium
-      const currentUser = JSON.parse(localStorage.getItem('user_data') || '{}')
-      currentUser.isPremium = true
-      currentUser.hasPremiumAccess = true
-      localStorage.setItem('user_data', JSON.stringify(currentUser))
-      
-      // Asegurar que el usuario tenga un token de autenticación válido
-      if (!localStorage.getItem('auth_token')) {
-        // Generar un token temporal para usuarios premium
-        const tempToken = 'premium-user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9)
-        localStorage.setItem('auth_token', tempToken)
-      }
-      
-      // Mostrar modal de éxito en lugar del mensaje
-      showSuccess.value = true
+      // Actualizar estado premium de forma robusta
+      await updatePremiumStatus()
       
       setTimeout(() => {
         emit('success', { type: 'payment', data: response })
-      }, 1000)
+        closeModal()
+      }, 2000)
     } else {
       error.value = response.message || 'Error al procesar el pago'
     }
@@ -604,30 +620,6 @@ watch(() => props.isOpen, (newValue) => {
     paymentOrder.value = null
   }
 })
-
-// Métodos para el modal de confirmación
-const showPaymentConfirmation = () => {
-  showConfirmation.value = true
-}
-
-const closeConfirmation = () => {
-  showConfirmation.value = false
-}
-
-const confirmPayment = () => {
-  showConfirmation.value = false
-  createPaymentOrder()
-}
-
-// Métodos para el modal de éxito
-const closeSuccess = () => {
-  showSuccess.value = false
-}
-
-const handleSuccessContinue = () => {
-  showSuccess.value = false
-  emit('close')
-}
 </script>
 
 <style scoped>
