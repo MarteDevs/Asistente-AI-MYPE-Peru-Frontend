@@ -502,6 +502,13 @@ const checkPaymentStatus = async () => {
         currentUser.hasPremiumAccess = true
         localStorage.setItem('user_data', JSON.stringify(currentUser))
         
+        // Asegurar que el usuario tenga un token de autenticación válido
+        if (!localStorage.getItem('auth_token')) {
+          // Generar un token temporal para usuarios premium
+          const tempToken = 'premium-user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9)
+          localStorage.setItem('auth_token', tempToken)
+        }
+        
         // Mostrar modal de éxito en lugar del mensaje
         showSuccess.value = true
         
@@ -544,6 +551,13 @@ const processPayment = async () => {
       currentUser.isPremium = true
       currentUser.hasPremiumAccess = true
       localStorage.setItem('user_data', JSON.stringify(currentUser))
+      
+      // Asegurar que el usuario tenga un token de autenticación válido
+      if (!localStorage.getItem('auth_token')) {
+        // Generar un token temporal para usuarios premium
+        const tempToken = 'premium-user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9)
+        localStorage.setItem('auth_token', tempToken)
+      }
       
       // Mostrar modal de éxito en lugar del mensaje
       showSuccess.value = true

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Premium Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Debug Premium Status</h1>
+        
+        <button onclick="checkPremiumStatus()">Verificar Estado Premium</button>
+        <button onclick="simulatePremiumUser()">Simular Usuario Premium</button>
+        <button onclick="clearStorage()">Limpiar localStorage</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function checkPremiumStatus() {
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+            
+            // Verificar auth_token
+            const authToken = localStorage.getItem('auth_token');
+            const authDiv = document.createElement('div');
+            authDiv.className = authToken ? 'status success' : 'status error';
+            authDiv.innerHTML = `
+                <h3>🔑 auth_token:</h3>
+                <p><strong>Existe:</strong> ${authToken ? 'SÍ' : 'NO'}</p>
+                <p><strong>Valor:</strong> ${authToken ? authToken.substring(0, 20) + '...' : 'No encontrado'}</p>
+            `;
+            results.appendChild(authDiv);
+            
+            // Verificar user_data
+            const userData = localStorage.getItem('user_data');
+            const userDataDiv = document.createElement('div');
+            userDataDiv.className = 'status info';
+            userDataDiv.innerHTML = `
+                <h3>👤 user_data en localStorage:</h3>
+                <pre>${userData || 'No encontrado'}</pre>
+            `;
+            results.appendChild(userDataDiv);
+            
+            let isPremium = false;
+            let hasPremiumAccess = false;
+            
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    isPremium = user.isPremium === true;
+                    hasPremiumAccess = user.hasPremiumAccess === true;
+                    
+                    const statusDiv = document.createElement('div');
+                    statusDiv.className = isPremium || hasPremiumAccess ? 'status success' : 'status error';
+                    statusDiv.innerHTML = `
+                        <h3>💎 Estado Premium:</h3>
+                        <p><strong>isPremium:</strong> ${user.isPremium}</p>
+                        <p><strong>hasPremiumAccess:</strong> ${user.hasPremiumAccess}</p>
+                        <p><strong>¿Es Premium?:</strong> ${isPremium || hasPremiumAccess ? 'SÍ' : 'NO'}</p>
+                    `;
+                    results.appendChild(statusDiv);
+                } catch (error) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'status error';
+                    errorDiv.innerHTML = `<h3>Error al parsear user_data:</h3><p>${error.message}</p>`;
+                    results.appendChild(errorDiv);
+                }
+            }
+            
+            // Simular la lógica de trialService
+            const isAuthenticated = !!authToken;
+            const canUseChat = isAuthenticated && (isPremium || hasPremiumAccess);
+            
+            const trialDiv = document.createElement('div');
+            trialDiv.className = canUseChat ? 'status success' : 'status error';
+            trialDiv.innerHTML = `
+                <h3>🤖 Simulación trialService.canUseChat():</h3>
+                <p><strong>isUserAuthenticated():</strong> ${isAuthenticated ? 'SÍ' : 'NO'}</p>
+                <p><strong>hasPremiumAccess():</strong> ${isPremium || hasPremiumAccess ? 'SÍ' : 'NO'}</p>
+                <p><strong>canUseChat:</strong> ${canUseChat ? 'SÍ' : 'NO'}</p>
+                <p><strong>Razón:</strong> ${canUseChat ? 'Usuario premium autenticado' : 'Falta autenticación o acceso premium'}</p>
+            `;
+            results.appendChild(trialDiv);
+            
+            // Verificar también 'user' por si acaso
+            const user = localStorage.getItem('user');
+            if (user) {
+                const userDiv = document.createElement('div');
+                userDiv.className = 'status info';
+                userDiv.innerHTML = `
+                    <h3>user en localStorage (clave antigua):</h3>
+                    <pre>${user}</pre>
+                `;
+                results.appendChild(userDiv);
+            }
+            
+            // Mostrar todas las claves de localStorage
+            const allKeys = Object.keys(localStorage);
+            const keysDiv = document.createElement('div');
+            keysDiv.className = 'status info';
+            keysDiv.innerHTML = `
+                <h3>🗂️ Todas las claves en localStorage:</h3>
+                <pre>${JSON.stringify(allKeys, null, 2)}</pre>
+            `;
+            results.appendChild(keysDiv);
+        }
+        
+        function simulatePremiumUser() {
+            const premiumUser = {
+                id: 1,
+                email: 'test@premium.com',
+                name: 'Usuario Premium',
+                isPremium: true,
+                hasPremiumAccess: true,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Simular también el token de autenticación
+            const fakeToken = 'fake-jwt-token-' + Date.now();
+            
+            localStorage.setItem('user_data', JSON.stringify(premiumUser));
+            localStorage.setItem('auth_token', fakeToken);
+            
+            const successDiv = document.createElement('div');
+            successDiv.className = 'status success';
+            successDiv.innerHTML = '<h3>✅ Usuario premium simulado creado (con auth_token)</h3>';
+            document.getElementById('results').appendChild(successDiv);
+            
+            checkPremiumStatus();
+        }
+        
+        function clearStorage() {
+            localStorage.clear();
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'status info';
+            infoDiv.innerHTML = '<h3>🗑️ localStorage limpiado</h3>';
+            document.getElementById('results').appendChild(infoDiv);
+        }
+        
+        // Verificar automáticamente al cargar
+        window.onload = checkPremiumStatus;
+    </script>
+</body>
+</html>
